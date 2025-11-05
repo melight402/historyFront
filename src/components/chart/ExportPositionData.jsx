@@ -151,11 +151,14 @@ const ExportPositionData = ({
 
       const dateTime = selectedDateTime ? new Date(selectedDateTime).toISOString() : new Date().toISOString();
 
+      const positionUsdt = Math.round((finalEntryPrice * roundedQuantity) * 100) / 100;
+
       const positionData = {
         dateTime: dateTime,
         positionSide: positionSide,
         price: finalEntryPrice,
         quantity: roundedQuantity,
+        positionUsdt: positionUsdt,
         stopLossPrice: finalStopLoss,
         takeProfitPrice: finalTakeProfitPrice,
         symbol: symbol,
