@@ -1,7 +1,9 @@
 {
-  "name": "vite-project",
+  "name": "history-front",
+  "version": "1.0.0",
+  "description": "React приложение для просмотра исторических данных криптовалютных графиков с возможностью воспроизведения",
+  "author": "melight402",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

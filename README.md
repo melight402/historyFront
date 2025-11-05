@@ -1,16 +1,135 @@
-# React + Vite
+# History Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React приложение для просмотра исторических данных криптовалютных графиков с возможностью воспроизведения (playback) и анализа прошлых сделок.
 
-Currently, two official plugins are available:
+## Основные возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Исторические графики**: Просмотр исторических данных с возможностью выбора даты и времени
+- **Playback режим**: Воспроизведение исторических данных с регулируемой скоростью
+- **Инструменты для анализа**: Рисование линий, позиций Long/Short для анализа прошлых сделок
+- **Экспорт позиций**: Экспорт данных о позициях для дальнейшего анализа
+- **Закрытие позиций**: Симуляция закрытия позиций с расчетом прибыли/убытка
+- **Множественные таймфреймы**: Переключение между различными интервалами (5m, 15m, 1h, 4h, 1d)
 
-## React Compiler
+## Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Lightweight Charts с расширениями для инструментов рисования
+- Vite
+- Binance API для исторических данных
 
-## Expanding the ESLint configuration
+## Установка
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+```
+
+## Разработка
+
+```bash
+npm run dev
+```
+
+Приложение будет доступно по адресу `http://localhost:5173`
+
+## Сборка
+
+```bash
+npm run build
+```
+
+## Линтинг
+
+```bash
+npm run lint
+```
+
+## Конфигурация
+
+### API Backend
+
+По умолчанию приложение использует `http://localhost:3001/api` как базовый URL API.
+
+Для изменения используйте переменную окружения:
+```bash
+VITE_API_BASE_URL=http://your-api-url/api npm run dev
+```
+
+### Зависимости
+
+Приложение использует локальные зависимости:
+- `lightweight-charts` с расширениями для инструментов рисования
+- `trading-charts-with-tools` - библиотека с расширенными возможностями графиков
+
+Убедитесь, что эти зависимости доступны локально или установите их через npm.
+
+## Структура проекта
+
+```
+src/
+├── components/          # React компоненты
+│   ├── chart/         # Компоненты графиков
+│   ├── controls/      # Элементы управления (playback, фильтры)
+│   ├── modals/        # Модальные окна
+│   └── sidebar/       # Боковая панель с символами
+├── contexts/          # React контексты
+├── hooks/             # Кастомные хуки для работы с данными
+├── services/          # Сервисы для хранения состояния
+├── utils/             # Утилиты
+└── constants/         # Константы
+```
+
+## Основные функции
+
+### Playback режим
+
+- Воспроизведение исторических данных с регулируемой скоростью (0.25x - 4x)
+- Выбор начальной даты и времени
+- Автоматическое обновление графика по мере воспроизведения
+
+### Инструменты анализа
+
+- Рисование линий тренда и поддержки/сопротивления
+- Создание позиций Long/Short для анализа прошлых сделок
+- Расчет риска и прибыли на основе исторических цен
+- Сохранение инструментов в localStorage
+
+### Экспорт данных
+
+- Экспорт позиций в JSON формате
+- Данные включают символ, цены входа/выхода, размер позиции, риск и прибыль
+
+### Закрытие позиций
+
+- Симуляция закрытия позиций в выбранный момент времени
+- Автоматический расчет прибыли/убытка
+- Поддержка как прибыльных, так и убыточных позиций
+
+## Интеграция с Backend
+
+Приложение интегрируется с `trading-back` сервером для:
+- Получения исторических данных (klines)
+- Получения списка символов
+- Экспорта позиций
+
+## Использование
+
+1. Выберите символ из боковой панели
+2. Выберите таймфрейм для анализа
+3. Установите дату и время начала воспроизведения
+4. Запустите playback для просмотра исторических данных
+5. Используйте инструменты рисования для анализа
+6. Создавайте позиции для симуляции сделок
+7. Экспортируйте данные для дальнейшего анализа
+
+## Разработка
+
+Проект следует атомарной архитектуре:
+- Каждый хук выполняет одну задачу
+- Компоненты разделены по ответственности
+- Стили вынесены в отдельные файлы
+- Логика бизнес-процессов в хуках и утилитах
+
+## Лицензия
+
+ISC
