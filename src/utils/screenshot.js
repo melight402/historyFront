@@ -9,8 +9,13 @@ export const takeScreenshot = async (element = document.body) => {
       logging: false,
     });
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
+        if (!blob) {
+          console.error('Failed to create blob from canvas');
+          reject(new Error('Failed to create screenshot blob'));
+          return;
+        }
         resolve(blob);
       }, 'image/png');
     });

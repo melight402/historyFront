@@ -46,7 +46,18 @@ const ClosePositionButton = ({
     setIsClosing(true);
 
     try {
-      const screenshotBlob = await takeScreenshot();
+      let screenshotBlob = null;
+      try {
+        screenshotBlob = await takeScreenshot();
+        console.log('Screenshot taken successfully, size:', screenshotBlob?.size);
+      } catch (screenshotError) {
+        console.error('Failed to take screenshot:', screenshotError);
+        const shouldContinue = confirm('Не удалось создать скриншот при закрытии. Продолжить закрытие позиции без скриншота?');
+        if (!shouldContinue) {
+          setIsClosing(false);
+          return;
+        }
+      }
 
       const closeDateTime = selectedDateTime ? new Date(selectedDateTime).toISOString() : new Date().toISOString();
 
