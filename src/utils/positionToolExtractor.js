@@ -17,8 +17,8 @@ export const getPositionToolData = (chartRef, lineToolId) => {
         takeProfitPrice: positionTool.points[2].price,
       };
     }
-  } catch (error) {
-    console.warn("Ошибка при извлечении данных инструмента:", error);
+  } catch {
+    void 0;
   }
 
   return null;

@@ -76,10 +76,11 @@ export const useChartPopup = (chart, candlestickSeries, loaded, drawingToolRef) 
 
     crosshairHandlerRef.current = handleCrosshairMove;
 
+    const chartInstance = chart.current;
     const timeoutId = setTimeout(() => {
-      if (chart.current && candlestickSeries.current && crosshairHandlerRef.current) {
+      if (chartInstance && candlestickSeries.current && crosshairHandlerRef.current) {
         try {
-          chart.current.subscribeCrosshairMove(crosshairHandlerRef.current);
+          chartInstance.subscribeCrosshairMove(crosshairHandlerRef.current);
         } catch {
           void 0;
         }
@@ -88,16 +89,17 @@ export const useChartPopup = (chart, candlestickSeries, loaded, drawingToolRef) 
 
     return () => {
       clearTimeout(timeoutId);
-      if (chart.current && crosshairHandlerRef.current) {
+      const handler = crosshairHandlerRef.current;
+      if (chartInstance && handler) {
         try {
-          chart.current.unsubscribeCrosshairMove(crosshairHandlerRef.current);
+          chartInstance.unsubscribeCrosshairMove(handler);
         } catch {
           void 0;
         }
       }
       crosshairHandlerRef.current = null;
     };
-  }, [chart, candlestickSeries, loaded, drawingToolRef]);
+  }, [chart, candlestickSeries, loaded, drawingToolRef, crosshairHandlerRef]);
 
   return { popupState, setPopupState };
 };

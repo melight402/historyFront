@@ -79,8 +79,8 @@ const App = () => {
             }
           });
         }
-      } catch (error) {
-        console.warn('Error updating line tools:', error);
+      } catch {
+        void 0;
       }
     }
   }, [symbol]);
@@ -145,8 +145,8 @@ const App = () => {
             }
           });
         }
-      } catch (error) {
-        console.warn('Error updating line tools:', error);
+      } catch {
+        void 0;
       }
     }
   }, [risk, symbol]);

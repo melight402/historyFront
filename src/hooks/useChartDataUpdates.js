@@ -19,7 +19,7 @@ export const useChartDataUpdates = (
 ) => {
   const dataUpdateTimeoutRef = useRef(null);
   const { processChartData } = useChartDataProcessor(currentSymbolRef);
-  const { setupInitialChartScale, setupPriceScaleOptions } = useChartScaleSetup(chart, candlestickSeries, currentIntervalRef, volumeAreaHeight, isRestoringStateRef);
+  const { setupInitialChartScale } = useChartScaleSetup(chart, candlestickSeries, currentIntervalRef, volumeAreaHeight, isRestoringStateRef);
   const { getVisibleRanges, restoreVisibleRanges } = useChartVisibleRange(chart);
   const { updateSeriesData } = useChartSeriesUpdater(chart, candlestickSeries, volumeSeries, volumeDataRef, lastCandleTimeRef, volumeAreaHeight, currentSymbolRef, currentIntervalRef);
 
@@ -75,11 +75,10 @@ export const useChartDataUpdates = (
           isUpdatingDataRef.current = false;
         }
       });
-    } catch (error) {
-      console.error("Error updating chart data:", error);
+    } catch {
       isUpdatingDataRef.current = false;
     }
-  }, [chart, candlestickSeries, volumeSeries, volumeDataRef, isInitialRender, lastCandleTimeRef, currentSymbolRef, currentIntervalRef, isRestoringStateRef, isUpdatingDataRef, volumeAreaHeight, processChartData, getVisibleRanges, restoreVisibleRanges, updateSeriesData, setupInitialChartScale]);
+  }, [chart, candlestickSeries, volumeSeries, isInitialRender, currentSymbolRef, isRestoringStateRef, isUpdatingDataRef, processChartData, getVisibleRanges, restoreVisibleRanges, updateSeriesData, setupInitialChartScale]);
 
   return { updateChartData, dataUpdateTimeoutRef };
 };

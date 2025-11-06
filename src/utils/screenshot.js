@@ -12,15 +12,13 @@ export const takeScreenshot = async (element = document.body) => {
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
         if (!blob) {
-          console.error('Failed to create blob from canvas');
           reject(new Error('Failed to create screenshot blob'));
           return;
         }
         resolve(blob);
       }, 'image/png');
     });
-  } catch (error) {
-    console.error('Error taking screenshot:', error);
+  } catch {
     throw new Error('Failed to take screenshot');
   }
 };

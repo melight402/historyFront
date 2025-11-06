@@ -10,8 +10,8 @@ const STORAGE_KEYS = {
 export const saveRisk = (risk) => {
   try {
     localStorage.setItem(STORAGE_KEYS.RISK_VALUE, JSON.stringify(risk));
-  } catch (error) {
-    console.warn('Failed to save risk to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -25,8 +25,7 @@ export const loadRisk = (defaultValue = 1) => {
       }
     }
     return defaultValue;
-  } catch (error) {
-    console.warn('Failed to load risk from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -38,8 +37,8 @@ export const saveBuySell = (value) => {
     } else {
       localStorage.removeItem(STORAGE_KEYS.BUY_SELL);
     }
-  } catch (error) {
-    console.warn('Failed to save buySell to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -49,8 +48,7 @@ export const loadBuySell = (defaultValue = "BUY") => {
     if (value === "buy") return "BUY";
     if (value === "sell") return "SELL";
     return value || defaultValue;
-  } catch (error) {
-    console.warn('Failed to load buySell from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -62,16 +60,15 @@ export const saveOpenClose = (value) => {
     } else {
       localStorage.removeItem(STORAGE_KEYS.OPEN_CLOSE);
     }
-  } catch (error) {
-    console.warn('Failed to save openClose to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
 export const loadOpenClose = (defaultValue = "open") => {
   try {
     return localStorage.getItem(STORAGE_KEYS.OPEN_CLOSE) || defaultValue;
-  } catch (error) {
-    console.warn('Failed to load openClose from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -83,16 +80,15 @@ export const saveOrderType = (value) => {
     } else {
       localStorage.removeItem(STORAGE_KEYS.ORDER_TYPE);
     }
-  } catch (error) {
-    console.warn('Failed to save orderType to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
 export const loadOrderType = (defaultValue = "MARKET") => {
   try {
     return localStorage.getItem(STORAGE_KEYS.ORDER_TYPE) || defaultValue;
-  } catch (error) {
-    console.warn('Failed to load orderType from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -104,16 +100,15 @@ export const saveTVXValue = (value) => {
     } else {
       localStorage.removeItem(STORAGE_KEYS.TVX_VALUE);
     }
-  } catch (error) {
-    console.warn('Failed to save tvxValue to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
 export const loadTVXValue = (defaultValue = "level_breakout") => {
   try {
     return localStorage.getItem(STORAGE_KEYS.TVX_VALUE) || defaultValue;
-  } catch (error) {
-    console.warn('Failed to load tvxValue from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -125,16 +120,15 @@ export const saveTakeProfit = (value) => {
     } else {
       localStorage.removeItem(STORAGE_KEYS.TAKE_PROFIT);
     }
-  } catch (error) {
-    console.warn('Failed to save takeProfit to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
 export const loadTakeProfit = (defaultValue = "3") => {
   try {
     return localStorage.getItem(STORAGE_KEYS.TAKE_PROFIT) || defaultValue;
-  } catch (error) {
-    console.warn('Failed to load takeProfit from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };

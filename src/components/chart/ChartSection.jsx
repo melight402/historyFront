@@ -3,10 +3,9 @@ import ChartControls from "../controls/ChartControls";
 import { PriceChart } from "./PriceChart";
 import "../../styles/styles.css";
 
-const ChartSection = ({ symbol, initialInterval = "1h", interval: externalInterval = null, onIntervalChange = null, drawingTool = null, onChartReady = null, onDrawingToolDeactivate = null, firstRowLeft = null, firstRowContent = null, firstRowCenter = null, secondRowLeft = null, secondRowCenter = null, secondRowRight = null, volumeAreaHeight = 0.07, limit = 500, chartKey = "chart1h", endTime = null, isPlaying = false, playbackSpeed = 1, onDateTimeUpdate = null }) => {
-  const [internalInterval, setInternalInterval] = useState(initialInterval);
+const ChartSection = ({ symbol, initialInterval = "1h", interval: externalInterval = null, drawingTool = null, onChartReady = null, onDrawingToolDeactivate = null, firstRowLeft = null, firstRowContent = null, firstRowCenter = null, secondRowLeft = null, secondRowCenter = null, secondRowRight = null, volumeAreaHeight = 0.07, limit = 500, chartKey = "chart1h", endTime = null, isPlaying = false, playbackSpeed = 1, onDateTimeUpdate = null }) => {
+  const [internalInterval] = useState(initialInterval);
   const interval = externalInterval !== null ? externalInterval : internalInterval;
-  const setInterval = onIntervalChange || setInternalInterval;
   const containerRef = React.useRef(null);
   const controlsRef = React.useRef(null);
   const [chartHeight, setChartHeight] = React.useState(400);

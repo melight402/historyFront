@@ -40,9 +40,10 @@ export const useVolumeScaleSync = (chart, volumeSeries, volumeDataRef, volumeAre
   }, [chart, volumeSeries, volumeDataRef, volumeAreaHeight]);
 
   useEffect(() => {
-    if (!chart.current) return;
+    const chartInstance = chart.current;
+    if (!chartInstance) return;
 
-    const timeScale = chart.current.timeScale();
+    const timeScale = chartInstance.timeScale();
     const timeRangeChangeHandler = () => {
       requestAnimationFrame(() => {
         updateVolumeScale();
@@ -55,8 +56,8 @@ export const useVolumeScaleSync = (chart, volumeSeries, volumeDataRef, volumeAre
     }, 200);
 
     return () => {
-      if (chart.current && timeRangeChangeHandler) {
-        const timeScale = chart.current.timeScale();
+      if (chartInstance && timeRangeChangeHandler) {
+        const timeScale = chartInstance.timeScale();
         timeScale.unsubscribeVisibleTimeRangeChange(timeRangeChangeHandler);
       }
     };

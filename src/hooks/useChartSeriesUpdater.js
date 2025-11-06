@@ -90,8 +90,7 @@ export const useChartSeriesUpdater = (chart, candlestickSeries, volumeSeries, vo
       }
 
       return true;
-    } catch (error) {
-      console.error("Error setting chart data:", error);
+    } catch {
       return false;
     }
   }, [chart, candlestickSeries, volumeSeries, volumeDataRef, lastCandleTimeRef, volumeAreaHeight, currentSymbolRef, currentIntervalRef]);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const usePlaybackControl = (
   isPlaying,
@@ -10,7 +10,7 @@ export const usePlaybackControl = (
   onDateTimeUpdate,
   lastLoadedTimeRef
 ) => {
-  const playbackIntervalRef = { current: null };
+  const playbackIntervalRef = useRef(null);
 
   useEffect(() => {
     if (!isPlaying) {

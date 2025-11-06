@@ -22,8 +22,8 @@ export const usePlaybackCandleUpdater = (chart, candlestickSeries, volumeSeries,
       });
 
       lastCandleTimeRef.current = candle.time;
-    } catch (error) {
-      console.warn('Failed to add candle:', error);
+    } catch {
+      void 0;
     }
   }, [chart, candlestickSeries, volumeSeries, lastCandleTimeRef]);
 

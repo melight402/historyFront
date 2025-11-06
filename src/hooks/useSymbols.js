@@ -151,7 +151,7 @@ export function useSymbols() {
         setSymbols(sorted);
       }
     }
-  }, [favorites]);
+  }, [favorites, symbols]);
 
   const toggleFavorite = useCallback((symbolValue) => {
     setFavorites(prev => {

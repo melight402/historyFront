@@ -10,8 +10,8 @@ export const saveSelectedDateTime = (dateTime) => {
     if (dateTime instanceof Date && !isNaN(dateTime.getTime())) {
       localStorage.setItem(STORAGE_KEYS.SELECTED_DATETIME, dateTime.toISOString());
     }
-  } catch (error) {
-    console.warn('Failed to save selected dateTime to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -25,8 +25,7 @@ export const loadSelectedDateTime = (defaultValue = null) => {
       }
     }
     return defaultValue || new Date();
-  } catch (error) {
-    console.warn('Failed to load selected dateTime from localStorage:', error);
+  } catch {
     return defaultValue || new Date();
   }
 };
@@ -34,8 +33,8 @@ export const loadSelectedDateTime = (defaultValue = null) => {
 export const saveSidebarOpen = (isOpen) => {
   try {
     localStorage.setItem(STORAGE_KEYS.SIDEBAR_OPEN, JSON.stringify(isOpen));
-  } catch (error) {
-    console.warn('Failed to save sidebar open state to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -46,8 +45,7 @@ export const loadSidebarOpen = (defaultValue = true) => {
       return JSON.parse(saved);
     }
     return defaultValue;
-  } catch (error) {
-    console.warn('Failed to load sidebar open state from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -57,8 +55,8 @@ export const savePlaybackSpeed = (speed) => {
     if (typeof speed === 'number' && speed >= 1 && speed <= 10) {
       localStorage.setItem(STORAGE_KEYS.PLAYBACK_SPEED, JSON.stringify(speed));
     }
-  } catch (error) {
-    console.warn('Failed to save playback speed to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -72,8 +70,7 @@ export const loadPlaybackSpeed = (defaultValue = 1) => {
       }
     }
     return defaultValue;
-  } catch (error) {
-    console.warn('Failed to load playback speed from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };
@@ -83,8 +80,8 @@ export const savePlaybackTimeframe = (timeframe) => {
     if (timeframe && typeof timeframe === 'string') {
       localStorage.setItem(STORAGE_KEYS.PLAYBACK_TIMEFRAME, timeframe);
     }
-  } catch (error) {
-    console.warn('Failed to save playback timeframe to localStorage:', error);
+  } catch {
+    void 0;
   }
 };
 
@@ -95,8 +92,7 @@ export const loadPlaybackTimeframe = (defaultValue = "5m") => {
       return saved;
     }
     return defaultValue;
-  } catch (error) {
-    console.warn('Failed to load playback timeframe from localStorage:', error);
+  } catch {
     return defaultValue;
   }
 };

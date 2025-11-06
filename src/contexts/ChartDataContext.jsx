@@ -188,7 +188,7 @@ export const useChartData = (key, symbol, interval, limit = 500, endTime = null)
     return () => {
       cleanup(dataKey);
     };
-  }, [key, symbol, interval, limit, endTime?.getTime(), endTime, loadChartData, cleanup]);
+  }, [key, symbol, interval, limit, endTime, loadChartData, cleanup]);
 
   const endTimeStamp = endTime instanceof Date && !isNaN(endTime.getTime()) ? endTime.getTime() : null;
   const dataKey = endTimeStamp !== null ? `${key}-${symbol}-${interval}-${endTimeStamp}` : `${key}-${symbol}-${interval}`;

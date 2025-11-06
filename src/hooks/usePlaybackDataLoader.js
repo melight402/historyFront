@@ -83,8 +83,8 @@ export const usePlaybackDataLoader = (symbol, interval, lastCandleTimeRef) => {
           lastLoadedTimeRef.current = lastCandle.time * 1000;
         }
       }
-    } catch (error) {
-      console.warn('Failed to load playback candles:', error);
+    } catch {
+      void 0;
     } finally {
       isLoadingRef.current = false;
     }

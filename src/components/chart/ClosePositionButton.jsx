@@ -49,9 +49,7 @@ const ClosePositionButton = ({
       let screenshotBlob = null;
       try {
         screenshotBlob = await takeScreenshot();
-        console.log('Screenshot taken successfully, size:', screenshotBlob?.size);
-      } catch (screenshotError) {
-        console.error('Failed to take screenshot:', screenshotError);
+      } catch {
         const shouldContinue = confirm('Не удалось создать скриншот при закрытии. Продолжить закрытие позиции без скриншота?');
         if (!shouldContinue) {
           setIsClosing(false);

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useChartCreation } from "./useChartCreation";
 import { useChartSeriesSetup } from "./useChartSeriesSetup";
 import { useVolumeScaleSync } from "./useVolumeScaleSync";
@@ -21,6 +21,7 @@ export const useChartInitialization = (
     if (!chartContainerRef.current) return;
     if (chart.current) return;
 
+    const onChartReady = onChartReadyRef.current;
     const containerWidth = chartContainerRef.current.clientWidth;
     
     const initializeChart = (width) => {
@@ -32,8 +33,8 @@ export const useChartInitialization = (
       chart.current = chartInstance;
       setupSeries();
 
-      if (onChartReadyRef.current) {
-        onChartReadyRef.current(chart.current);
+      if (onChartReady) {
+        onChartReady(chart.current);
       }
     };
 
@@ -72,8 +73,8 @@ export const useChartInitialization = (
         candlestickSeries.current = null;
         volumeSeries.current = null;
       }
-      if (onChartReadyRef.current) {
-        onChartReadyRef.current(null);
+      if (onChartReady) {
+        onChartReady(null);
       }
     };
   }, [volumeAreaHeight, height, chartContainerRef, chart, candlestickSeries, volumeSeries, volumeDataRef, onChartReadyRef, createChartInstance, setupSeries]);

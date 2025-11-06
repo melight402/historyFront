@@ -34,7 +34,6 @@ export const useSymbolChangeHandler = (
 
     if (symbolChanged || intervalChanged) {
       const oldSymbol = prevSymbolRef.current;
-      const oldInterval = prevIntervalRef.current;
       
       if (chart.current && candlestickSeries.current) {
         try {
