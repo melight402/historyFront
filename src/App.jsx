@@ -14,6 +14,7 @@ import DateTimePicker from "./components/controls/DateTimePicker";
 import SidebarToggle from "./components/controls/SidebarToggle";
 import SymbolDisplay from "./components/controls/SymbolDisplay";
 import { ChartDataProvider } from "./contexts/ChartDataContext";
+import { useDeleteKeyHandler } from "./hooks/useDeleteKeyHandler";
 import {
   loadSelectedSymbol,
   saveSelectedSymbol,
@@ -182,6 +183,8 @@ const App = () => {
       clearAllChartStates();
     }
   }), [symbol]);
+
+  useDeleteKeyHandler(deleteToolsHandlers.onDeleteSelected);
 
   const topChartFirstRowLeft = useMemo(() => (
     <DateTimePicker value={selectedDateTime} onChange={setSelectedDateTime} />
