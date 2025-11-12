@@ -10,17 +10,22 @@ import SymbolsSidebar from "./components/sidebar/SymbolsSidebar";
 import PlaybackSpeedSlider from "./components/controls/PlaybackSpeedSlider";
 import PlaybackToggle from "./components/controls/PlaybackToggle";
 import PlaybackTimeframeDropdown from "./components/controls/PlaybackTimeframeDropdown";
+import TVXSelector from "./components/controls/TVXSelector";
 import DateTimePicker from "./components/controls/DateTimePicker";
 import SidebarToggle from "./components/controls/SidebarToggle";
 import SymbolDisplay from "./components/controls/SymbolDisplay";
 import { ChartDataProvider } from "./contexts/ChartDataContext";
 import { useDeleteKeyHandler } from "./hooks/useDeleteKeyHandler";
+import { useChartDeleteToolsHandlers } from "./hooks/useChartDeleteToolsHandlers";
+import { useChartLineToolRiskSync } from "./hooks/useChartLineToolRiskSync";
+import { useChartLineToolSymbolSync } from "./hooks/useChartLineToolSymbolSync";
 import {
   loadSelectedSymbol,
   saveSelectedSymbol,
   loadRisk,
   saveRisk,
-  clearAllChartStates,
+  loadTVXValue,
+  saveTVXValue,
   loadSelectedDateTime,
   saveSelectedDateTime,
   loadSidebarOpen,
@@ -30,11 +35,6 @@ import {
   loadPlaybackTimeframe,
   savePlaybackTimeframe,
 } from "./services/localStorageUtils";
-import { 
-  persistLineToolsFromChart, 
-  removeAllLineToolsFromStorage,
-  removeLineToolsFromStorage
-} from "./services/lineToolsManager";
 import "./styles/styles.css";
 import { BINANCE_FUTURES_STEP_SIZES } from "./constants/binanceStepSizes";
 
@@ -46,6 +46,7 @@ const App = () => {
   const [symbol, setSymbol] = useState(() => loadSelectedSymbol("BTCUSDT"));
   const [drawingTool, setDrawingTool] = useState(null);
   const [risk, setRisk] = useState(() => loadRisk(1));
+  const [tvxValue, setTVXValue] = useState(() => loadTVXValue("level_breakout"));
   const [profitLoss, setProfitLoss] = useState("profit");
 
   useEffect(() => {
@@ -55,36 +56,7 @@ const App = () => {
   }, [risk]);
 
   const chart5mRef = useRef(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.__CURRENT_SYMBOL = symbol;
-    }
-
-    if (chart5mRef.current) {
-      try {
-        const exported = chart5mRef.current.exportLineTools();
-        if (exported && exported !== '[]') {
-          const tools = JSON.parse(exported);
-          tools.forEach((tool) => {
-            if (tool.toolType === 'LongShortPosition') {
-              const updatedTool = {
-                ...tool,
-                options: {
-                  ...tool.options,
-                  symbol: symbol || '',
-                  risk: parseFloat(window.__CURRENT_RISK || 0) || 0
-                }
-              };
-              chart5mRef.current.applyLineToolOptions(updatedTool);
-            }
-          });
-        }
-      } catch {
-        void 0;
-      }
-    }
-  }, [symbol]);
+  useChartLineToolSymbolSync(chart5mRef, symbol);
 
   const handleChart5mReady = useCallback((chart) => {
     chart5mRef.current = chart;
@@ -120,69 +92,20 @@ const App = () => {
     savePlaybackTimeframe(playbackTimeframe);
   }, [playbackTimeframe]);
 
+  useEffect(() => {
+    saveTVXValue(tvxValue);
+  }, [tvxValue]);
+
 
   useEffect(() => {
     saveRisk(risk);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.__CURRENT_RISK = risk;
     }
+  }, [risk]);
+  useChartLineToolRiskSync(chart5mRef, risk, symbol);
 
-    if (chart5mRef.current) {
-      try {
-        const exported = chart5mRef.current.exportLineTools();
-        if (exported && exported !== '[]') {
-          const tools = JSON.parse(exported);
-          tools.forEach((tool) => {
-            if (tool.toolType === 'LongShortPosition') {
-              const updatedTool = {
-                ...tool,
-                options: {
-                  ...tool.options,
-                  risk: parseFloat(risk) || 0,
-                  symbol: symbol || window.__CURRENT_SYMBOL || ''
-                }
-              };
-              chart5mRef.current.applyLineToolOptions(updatedTool);
-            }
-          });
-        }
-      } catch {
-        void 0;
-      }
-    }
-  }, [risk, symbol]);
-
-  const deleteToolsHandlers = useMemo(() => ({
-    onDeleteSelected: () => {
-      if (chart5mRef.current) {
-        try {
-          chart5mRef.current.removeSelectedLineTools();
-          setTimeout(() => {
-            const exported = chart5mRef.current.exportLineTools();
-            if (exported && exported.trim() !== '' && exported !== '[]') {
-              persistLineToolsFromChart(chart5mRef.current, symbol);
-            } else {
-              removeLineToolsFromStorage(symbol);
-            }
-          }, 100);
-        } catch {
-          void 0;
-        }
-      }
-    },
-    onDeleteAll: () => {
-      if (chart5mRef.current) {
-        try {
-          chart5mRef.current.removeAllLineTools();
-        } catch {
-          void 0;
-        }
-      }
-      
-      removeAllLineToolsFromStorage();
-      clearAllChartStates();
-    }
-  }), [symbol]);
+  const deleteToolsHandlers = useChartDeleteToolsHandlers(chart5mRef, symbol);
 
   useDeleteKeyHandler(deleteToolsHandlers.onDeleteSelected);
 
@@ -192,10 +115,11 @@ const App = () => {
 
   const topChartFirstRow = useMemo(() => (
     <>
+      <TVXSelector tvxValue={tvxValue} onTVXChange={setTVXValue} />
       <DrawingToolsSelector drawingTool={drawingTool} onDrawingToolChange={setDrawingTool} />
       <SidebarToggle isOpen={isSidebarOpen} onToggle={setIsSidebarOpen} />
     </>
-  ), [drawingTool, isSidebarOpen]);
+  ), [drawingTool, isSidebarOpen, tvxValue]);
 
   const topChartFirstRowCenter = useMemo(() => (
     <>
@@ -225,9 +149,10 @@ const App = () => {
         symbol={symbol}
         risk={risk}
         selectedDateTime={selectedDateTime}
+        tvxValue={tvxValue}
       />
     </>
-  ), [symbol, risk, profitLoss, selectedDateTime]);
+  ), [symbol, risk, profitLoss, selectedDateTime, tvxValue]);
 
   return (
     <ChartDataProvider>

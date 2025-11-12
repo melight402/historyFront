@@ -5,11 +5,12 @@ import { calculatePositionQuantity, calculateTakeProfitPrice, calculateEntryPtCo
 import { roundQuantityToStepSize } from "../../utils/tickSizeCache";
 import "../../styles/styles.css";
 
-const ExportPositionData = ({ 
-  chart5mRef, 
-  symbol, 
+const ExportPositionData = ({
+  chart5mRef,
+  symbol,
   risk,
   selectedDateTime,
+  tvxValue,
 }) => {
   const [isExporting, setIsExporting] = useState(false);
   
@@ -162,7 +163,7 @@ const ExportPositionData = ({
         stopLossPrice: finalStopLoss,
         takeProfitPrice: finalTakeProfitPrice,
         symbol: symbol,
-        tvx: "level_breakout",
+        tvx: tvxValue || "level_breakout",
         risk: riskValue,
         lineToolId: lastTool ? lastTool.id : null,
       };
