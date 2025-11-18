@@ -168,7 +168,7 @@ const App = () => {
               onChartReady={handleChart5mReady}
               onDrawingToolDeactivate={() => setDrawingTool(null)}
               volumeAreaHeight={0.14}
-              limit={300}
+              limit={1500}
               endTime={effectiveEndTime}
               isPlaying={isPlaying}
               playbackSpeed={playbackSpeed}

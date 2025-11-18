@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 
-export function useMarketData(symbol = "BTCUSDT", interval = "1h", limit = 500) {
+export function useMarketData(symbol = "BTCUSDT", interval = "1h", limit = 1500) {
   const [data, setData] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(null);
