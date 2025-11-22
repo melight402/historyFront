@@ -9,6 +9,7 @@ const ClosePositionButton = ({
   profitLoss,
   selectedDateTime,
   chartRef,
+  tradeNote,
 }) => {
   const [isClosing, setIsClosing] = useState(false);
   
@@ -66,6 +67,7 @@ const ClosePositionButton = ({
         profitLoss: profitLoss,
         stopLossPrice: toolData.stopLossPrice,
         takeProfitPrice: toolData.takeProfitPrice,
+        note: tradeNote || null,
       };
 
       await closePosition(closeData, screenshotBlob);

@@ -6,6 +6,7 @@ import ExportPositionData from "./components/chart/ExportPositionData";
 import ClosePositionButton from "./components/chart/ClosePositionButton";
 import RiskInput from "./components/controls/RiskInput";
 import ProfitLossSelector from "./components/controls/ProfitLossSelector";
+import TradeNoteInput from "./components/controls/TradeNoteInput";
 import SymbolsSidebar from "./components/sidebar/SymbolsSidebar";
 import PlaybackSpeedSlider from "./components/controls/PlaybackSpeedSlider";
 import PlaybackToggle from "./components/controls/PlaybackToggle";
@@ -48,6 +49,7 @@ const App = () => {
   const [risk, setRisk] = useState(() => loadRisk(1));
   const [tvxValue, setTVXValue] = useState(() => loadTVXValue("level_breakout"));
   const [profitLoss, setProfitLoss] = useState("profit");
+  const [tradeNote, setTradeNote] = useState("");
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -138,11 +140,13 @@ const App = () => {
     <>
       <RiskInput risk={risk} onRiskChange={setRisk} />
       <ProfitLossSelector value={profitLoss} onChange={setProfitLoss} />
+      <TradeNoteInput value={tradeNote} onChange={setTradeNote} />
       <ClosePositionButton
         symbol={symbol}
         profitLoss={profitLoss}
         selectedDateTime={selectedDateTime}
         chartRef={chart5mRef}
+        tradeNote={tradeNote}
       />
       <ExportPositionData
         chart5mRef={chart5mRef}
@@ -152,7 +156,7 @@ const App = () => {
         tvxValue={tvxValue}
       />
     </>
-  ), [symbol, risk, profitLoss, selectedDateTime, tvxValue]);
+  ), [symbol, risk, profitLoss, selectedDateTime, tvxValue, tradeNote]);
 
   return (
     <ChartDataProvider>
