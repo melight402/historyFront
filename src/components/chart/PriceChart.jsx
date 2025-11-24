@@ -1,15 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import { useChartData } from "../../contexts/ChartDataContext";
-import { persistLineToolsFromChart } from "../../services/lineToolsManager";
-import { saveChartState } from "../../services/chartStateStorage";
 import { useChartInitialization } from "../../hooks/useChartInitialization";
 import { useChartPopup } from "../../hooks/useChartPopup";
 import { useChartDataUpdates } from "../../hooks/useChartDataUpdates";
 import { useChartLineTools } from "../../hooks/useChartLineTools";
 import { useChartDataSync } from "../../hooks/useChartDataSync";
 import { usePlayback } from "../../hooks/usePlayback";
+import { useChartContextMenuSave } from "../../hooks/useChartContextMenuSave";
+import { useSessionHighlighting } from "../../hooks/useSessionHighlighting";
 import CandlePopup from "./CandlePopup";
 import "../../styles/styles.css";
+import "../../styles/chartSessions.css";
 
 const PriceChart = ({ height = 900, symbol = "BTCUSDT", interval = "1h", drawingTool = null, onChartReady = null, onDrawingToolDeactivate = null, volumeAreaHeight = 0.07, limit = 500, chartKey = "chart1h", endTime = null, isPlaying = false, playbackSpeed = 1, onDateTimeUpdate = null }) => {
   const chartContainerRef = useRef();
@@ -27,6 +28,7 @@ const PriceChart = ({ height = 900, symbol = "BTCUSDT", interval = "1h", drawing
   const drawingToolRef = useRef(drawingTool);
   const isRestoringStateRef = useRef(false);
   const isUpdatingDataRef = useRef(false);
+  const { handleSessionOverlayReady } = useSessionHighlighting(chartContainerRef);
   
   const { data, loaded, error } = useChartData(chartKey, symbol, interval, limit, endTime);
 
@@ -75,9 +77,19 @@ const PriceChart = ({ height = 900, symbol = "BTCUSDT", interval = "1h", drawing
     onChartReadyRef
   );
 
+  const mergedOnChartReady = React.useCallback(
+    (chartInstance) => {
+      handleSessionOverlayReady(chartInstance);
+      if (onChartReady) {
+        onChartReady(chartInstance);
+      }
+    },
+    [handleSessionOverlayReady, onChartReady]
+  );
+
   React.useEffect(() => {
-    onChartReadyRef.current = onChartReady;
-  }, [onChartReady]);
+    onChartReadyRef.current = mergedOnChartReady;
+  }, [mergedOnChartReady]);
 
   React.useEffect(() => {
     drawingToolRef.current = drawingTool;
@@ -136,62 +148,12 @@ const PriceChart = ({ height = 900, symbol = "BTCUSDT", interval = "1h", drawing
     onDateTimeUpdate
   );
 
-  const handleContainerContextMenu = (e) => {
-      e.preventDefault();
-    if (chart.current && currentSymbolRef.current && currentIntervalRef.current) {
-      persistLineToolsFromChart(chart.current, currentSymbolRef.current);
-      
-      try {
-        const timeScale = chart.current.timeScale();
-        const priceScale = chart.current.priceScale('right');
-        
-        const state = {};
-        
-        if (timeScale) {
-          const logicalRange = timeScale.getVisibleLogicalRange();
-          const timeRange = timeScale.getVisibleRange();
-          
-          if (logicalRange && typeof logicalRange.from === 'number' && typeof logicalRange.to === 'number' && 
-              !isNaN(logicalRange.from) && !isNaN(logicalRange.to)) {
-            state.logicalRange = logicalRange;
-          }
-          if (timeRange && timeRange.from != null && timeRange.to != null) {
-            state.timeRange = timeRange;
-          }
-        }
-        
-        if (priceScale && candlestickSeries.current) {
-          try {
-            const priceScaleOptions = priceScale.options();
-            state.priceScale = {
-              autoScale: priceScaleOptions?.autoScale ?? true,
-              scaleMargins: priceScaleOptions?.scaleMargins
-            };
-            
-            try {
-              const visibleRange = priceScale.getVisibleRange();
-              if (visibleRange && visibleRange.minValue !== null && visibleRange.maxValue !== null) {
-                state.priceRange = {
-                  from: visibleRange.minValue,
-                  to: visibleRange.maxValue
-                };
-              }
-            } catch {
-              void 0;
-            }
-          } catch {
-            void 0;
-          }
-        }
-        
-        if (state.logicalRange || state.timeRange || state.priceScale || state.priceRange) {
-          saveChartState(currentSymbolRef.current, currentIntervalRef.current, state);
-        }
-      } catch {
-        void 0;
-      }
-    }
-  };
+  const { handleContextMenu: handleContainerContextMenu } = useChartContextMenuSave(
+    chart,
+    candlestickSeries,
+    currentSymbolRef,
+    currentIntervalRef
+  );
 
   return (
     <div
